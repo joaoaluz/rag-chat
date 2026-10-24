@@ -48,12 +48,16 @@ class Chunk:
 
     @property
     def texto_para_embedding(self) -> str:
-        """O que será vetorizado: o texto com o "endereço" dele no documento.
+        return texto_para_embedding(self.capitulo, self.secao, self.texto)
 
-        Um trecho como "A validade será de 24 meses" sozinho não diz de qual
-        credencial está falando. Com o cabeçalho, o vetor carrega esse contexto.
-        """
-        return f"{self.capitulo} > {self.secao}\n{self.texto}"
+
+def texto_para_embedding(capitulo: str, secao: str, texto: str) -> str:
+    """O que será vetorizado: o texto com o "endereço" dele no documento.
+
+    Um trecho como "A validade será de 24 meses" sozinho não diz de qual
+    credencial está falando. Com o cabeçalho, o vetor carrega esse contexto.
+    """
+    return f"{capitulo} > {secao}\n{texto}"
 
 
 def _eh_capa(texto: str) -> bool:

@@ -1,0 +1,18 @@
+[
+  {"pergunta": "Qual a validade da credencial plena?",
+   "secao_esperada": "Período de validade do credenciamento", "pagina": 23},
+  {"pergunta": "Quais documentos o comerciário precisa apresentar?",
+   "secao_esperada": "Condições para emissão da credencial plena", "pagina": 25},
+  {"pergunta": "Até que idade o filho pode ser dependente?",
+   "secao_esperada": "Dependentes", "pagina": 17},
+  {"pergunta": "Estou desempregado, ainda posso usar o Sesc?",
+   "secao_esperada": "Trabalhador do comércio de bens, serviços e turismo", "pagina": 15},
+  {"pergunta": "Meu filho pode tirar a carteirinha?",
+   "secao_esperada": "Dependentes", "pagina": 17},
+  {"pergunta": "Posso emprestar minha carteirinha para minha irmã?",
+   "secao_esperada": "Deveres do cliente", "pagina": 55},
+  {"pergunta": "Com quanto tempo de antecedência posso renovar a credencial plena?",
+   "secao_esperada": "Período de validade do credenciamento", "pagina": 23},
+  {"pergunta": "Que informações aparecem impressas na credencial?",
+   "secao_esperada": "Informações, formato e leiautes das credenciais Sesc", "pagina": 41}
+]
