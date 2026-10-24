@@ -32,6 +32,19 @@ DDL = [
         PRIMARY KEY (documento_id, pagina)
     )
     """,
+    """
+    CREATE TABLE IF NOT EXISTS DOCUMENTO_CHUNKS (
+        id            INTEGER PRIMARY KEY,
+        documento_id  NUMBER        NOT NULL REFERENCES DOCUMENTOS(id),
+        chunk_idx     NUMBER        NOT NULL,
+        capitulo      VARCHAR2(200) NOT NULL,
+        secao         VARCHAR2(300) NOT NULL,
+        pagina_inicio NUMBER        NOT NULL,
+        pagina_fim    NUMBER        NOT NULL,
+        texto         CLOB          NOT NULL,
+        UNIQUE (documento_id, chunk_idx)
+    )
+    """,
 ]
 
 
@@ -89,5 +102,45 @@ def listar_paginas(conn: sqlite3.Connection, documento_id: int) -> list[sqlite3.
         WHERE documento_id = :doc
         ORDER BY pagina
         """,
+        {"doc": documento_id},
+    ).fetchall()
+
+
+def ultimo_documento(conn: sqlite3.Connection):
+    return conn.execute("SELECT * FROM DOCUMENTOS ORDER BY id DESC LIMIT 1").fetchone()
+
+
+def substituir_chunks(conn: sqlite3.Connection, documento_id: int, chunks: list) -> None:
+    """Apaga os chunks antigos do documento e grava os novos.
+
+    Chunking é barato e a gente vai ajustar os parâmetros várias vezes;
+    por isso refazemos tudo a cada execução em vez de tentar atualizar.
+    """
+    with conn:
+        conn.execute("DELETE FROM DOCUMENTO_CHUNKS WHERE documento_id = :doc", {"doc": documento_id})
+        conn.executemany(
+            """
+            INSERT INTO DOCUMENTO_CHUNKS
+                (documento_id, chunk_idx, capitulo, secao, pagina_inicio, pagina_fim, texto)
+            VALUES (:doc, :idx, :capitulo, :secao, :pag_ini, :pag_fim, :texto)
+            """,
+            [
+                {
+                    "doc": documento_id,
+                    "idx": idx,
+                    "capitulo": c.capitulo,
+                    "secao": c.secao,
+                    "pag_ini": c.pagina_inicio,
+                    "pag_fim": c.pagina_fim,
+                    "texto": c.texto,
+                }
+                for idx, c in enumerate(chunks)
+            ],
+        )
+
+
+def listar_chunks(conn: sqlite3.Connection, documento_id: int) -> list[sqlite3.Row]:
+    return conn.execute(
+        "SELECT * FROM DOCUMENTO_CHUNKS WHERE documento_id = :doc ORDER BY chunk_idx",
         {"doc": documento_id},
     ).fetchall()
