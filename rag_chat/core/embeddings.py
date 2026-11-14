@@ -124,4 +124,4 @@ def criar_embedder() -> Embedder:
 
     if config.EMBEDDER == "tfidf":
         return TfidfEmbedder(config.TFIDF_MODELO_PATH)
-    return OllamaEmbedder(config.LLM_BASE_URL, config.EMBEDDER)
+    return OllamaEmbedder(config.EMBEDDINGS_URL, config.EMBEDDER)
